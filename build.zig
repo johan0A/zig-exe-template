@@ -1,6 +1,7 @@
 const std = @import("std");
+const B = std.Build;
 
-pub fn build(b: *std.Build) void {
+pub fn build(b: *B) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
@@ -58,12 +59,12 @@ pub fn build(b: *std.Build) void {
 }
 
 fn addDependencies(
-    exe: *std.Build.Step.Compile,
-    b: *std.Build,
-    target: std.Build.ResolvedTarget,
+    compile_step: *B.Step.Compile,
+    b: *B,
+    target: B.ResolvedTarget,
     optimize: std.builtin.OptimizeMode,
 ) void {
-    _ = exe;
+    _ = compile_step;
     _ = b;
     _ = target;
     _ = optimize;
