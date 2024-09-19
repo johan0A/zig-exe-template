@@ -38,14 +38,22 @@ pub fn build(b: *std.Build) void {
 
     {
         const exe_check = b.addExecutable(.{
-            .name = "vulkan-tutorial-check",
+            .name = "check",
             .root_source_file = b.path("src/main.zig"),
             .target = target,
             .optimize = optimize,
         });
 
-        const check = b.step("check", "Check if exe compiles");
+        const tests_check = b.addTest(.{
+            .name = "check",
+            .root_source_file = b.path("src/main.zig"),
+            .target = target,
+            .optimize = optimize,
+        });
+
+        const check = b.step("check", "Check if exe and tests compile");
         check.dependOn(&exe_check.step);
+        check.dependOn(&tests_check.step);
     }
 }
 
