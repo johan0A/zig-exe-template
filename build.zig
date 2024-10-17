@@ -5,13 +5,16 @@ pub fn build(b: *B) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
+    const name = b.option([]const u8, "name", "set the name of the outputed artifact");
+
     {
         const exe = b.addExecutable(.{
-            .name = "zig-exe-template",
+            .name = name orelse "zig-exe-template",
             .root_source_file = b.path("src/main.zig"),
             .target = target,
             .optimize = optimize,
         });
+        addDependencies(exe, b, target, optimize);
 
         b.installArtifact(exe);
         const run_cmd = b.addRunArtifact(exe);
@@ -26,15 +29,21 @@ pub fn build(b: *B) void {
     }
 
     {
-        const exe_unit_tests = b.addTest(.{
+        const tests = b.addTest(.{
+            .name = name orelse "test",
             .root_source_file = b.path("src/main.zig"),
             .target = target,
             .optimize = optimize,
         });
+        addDependencies(tests, b, target, optimize);
 
-        const run_exe_unit_tests = b.addRunArtifact(exe_unit_tests);
+        const run_tests = b.addRunArtifact(tests);
         const test_step = b.step("test", "Run unit tests");
-        test_step.dependOn(&run_exe_unit_tests.step);
+        test_step.dependOn(&run_tests.step);
+
+        const debug_tests_artifact = b.addInstallArtifact(tests, .{});
+        const debug_tests_step = b.step("build-test", "Create a test artifact that runs the tests");
+        debug_tests_step.dependOn(&debug_tests_artifact.step);
     }
 
     {
@@ -44,6 +53,7 @@ pub fn build(b: *B) void {
             .target = target,
             .optimize = optimize,
         });
+        addDependencies(exe_check, b, target, optimize);
 
         const tests_check = b.addTest(.{
             .name = "check",
@@ -51,6 +61,7 @@ pub fn build(b: *B) void {
             .target = target,
             .optimize = optimize,
         });
+        addDependencies(tests_check, b, target, optimize);
 
         const check = b.step("check", "Check if exe and tests compile");
         check.dependOn(&exe_check.step);

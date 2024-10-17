@@ -4,12 +4,12 @@
         {
             "label": "zig-debug-build",
             "type": "shell",
-            "command": "zig build"
+            "command": "zig build -Dname=debug"
         },
         {
             "label": "zig-debug-test-build",
             "type": "shell",
-            "command": "zig build test"
+            "command": "zig build build-test"
         }
     ]
 }
