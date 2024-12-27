@@ -5,7 +5,7 @@ pub fn build(b: *B) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
-    const name = b.option([]const u8, "name", "set the name of the outputed artifact");
+    const name = b.option([]const u8, "name", "set the name of the outputted artifact");
 
     {
         const exe = b.addExecutable(.{
