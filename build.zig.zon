@@ -1,6 +1,7 @@
 .{
-    .name = "zig-exe-template",
+    .name = .zig_exe_template,
     .version = "0.0.0",
+    .fingerprint = 0xa8bffe96aaea286b,
     .dependencies = .{},
     .paths = .{
         "build.zig",
